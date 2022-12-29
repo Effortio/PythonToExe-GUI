@@ -1,11 +1,13 @@
 import subprocess
 import tkinter as tk
 from tkinter import filedialog,messagebox
-import os
 gui = tk.Tk()
 
 def package():
     global subto
+    overrun = tk.Tk()
+    terminal = tk.Text(overrun,font=('Consolas',10))
+    terminal.pack(fill='both')
     if packfilepath.get() == '':
         messagebox.showerror('错误！','部分打*的项目还没有填写。请检查后重试。')
     else:
@@ -40,7 +42,7 @@ def getdisabledofkey():
     else:
         keyinput['state'] = 'disabled'
 def geticonfile():#获取文件路径
-    toiconfile = filedialog.askopenfilename(title='请选择图标',filetypes=[('icon图标','.py')])
+    toiconfile = filedialog.askopenfilename(title='请选择图标',filetypes=[('icon图标','.ico')])
     if toiconfile != '':
         iconfilepath.set(toiconfile)
 def getdisabledoficon():
@@ -54,7 +56,7 @@ packfilepath = tk.StringVar()
 packfilepath.set('')
 savefilepath = tk.StringVar()
 savefilepath.set('')
-gui.geometry('500x500')
+gui.geometry('500x235')
 gui.title('Python打包exe')
 tk.Label(gui,text='Python打包exe',background='orange',font=('华文细黑',22,'bold')).pack(fill='x')
 #第一步：选择文件路径
@@ -122,7 +124,5 @@ icon.pack(side='left')
 line3.pack(anchor='w')
 step2.pack(anchor='w')
 
-tk.Button(gui,text='开始打包（所耗时间约15秒，请耐心等待）',background='green',activebackground='purple',foreground='white',font=('华文宋体',12,'bold'),command=package).pack(fill='x')
-terminal = tk.Text(gui,font=('Consolas',10))
-terminal.pack(fill='both')
+go = tk.Button(gui,text='开始打包（所耗时间约15秒，请耐心等待）',background='green',activebackground='purple',foreground='white',font=('华文宋体',12,'bold'),command=package).pack(fill='x')
 gui.mainloop()
