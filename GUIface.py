@@ -6,6 +6,7 @@ gui = tk.Tk()
 def package():
     global subto
     overrun = tk.Tk()
+    tk.Label(gui,text='运行时的输出',background='green',font=('华文细黑',22,'bold'),foreground='purple').pack(fill='x')
     terminal = tk.Text(overrun,font=('Consolas',10))
     terminal.pack(fill='both')
     if packfilepath.get() == '':
@@ -26,8 +27,8 @@ def package():
                 errlog = {1:'无法安装pyinstaller库，请检查您的pip配置。',2:'在指令生成/运行中出现问题。'}
                 if subto.returncode == 1:
                     terminal.insert(tk.END,'程序执行失败，错误码：' + str(subto.returncode) + '，错误原因：' + errlog[subto.returncode])
-                    with open('errorlog.txt','a',encoding='utf-8') as f:
-                        f.write('ErrorWhileExecuting[' + str(subto.returncode) + '] Reason:' + errlog[subto.returncode])
+        with open('errorlog.txt','a',encoding='utf-8') as f:
+            f.write(terminal.get(0,tk.END))
 def getpackagefile():#获取文件路径
     topackfile = filedialog.askopenfilename(title='请选择文件',filetypes=[('Python程序','.py')])
     if topackfile != '':
