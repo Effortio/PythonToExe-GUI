@@ -6,7 +6,7 @@ An easy GUI that build exe file from .py.
 Directly click 'GUIface.py' to run the window.  
 直接双击“GUIface”即可运行。
 
-## How is it made 制作说明
+## How it was made 制作说明
 This is a program which is created from an idea that I've packaged a lot of python files to executable files.It's not easy to use CMD to package the file.So I designed a GUI face to show it to run.
 
 It's depend on the PYINSTALLER module.Don't worry,it'll run even though you've not installed this module.

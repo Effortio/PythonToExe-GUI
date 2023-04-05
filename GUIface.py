@@ -1,18 +1,20 @@
+import os
 import subprocess
+import sys
 import tkinter as tk
 from tkinter import filedialog,messagebox
 gui = tk.Tk()
 
 def package():
     global subto
-    overrun = tk.Tk()
-    tk.Label(gui,text='运行时的输出',background='green',font=('华文细黑',22,'bold'),foreground='purple').pack(fill='x')
-    terminal = tk.Text(overrun,font=('Consolas',10))
-    terminal.pack(fill='both')
-    if packfilepath.get() == '':
+    if packfilepath.get() == '' or savefilepath.get() == '':
         messagebox.showerror('错误！','部分打*的项目还没有填写。请检查后重试。')
     else:
-        subto = subprocess.Popen('python exepackagemain.py',text=True,stdin=subprocess.PIPE,stdout=subprocess.PIPE,encoding='utf-8',stderr=subprocess.STDOUT)
+        overrun = tk.Tk()
+        tk.Label(overrun,text='运行时的输出',background='green',font=('华文细黑',22,'bold'),foreground='white').pack(fill='x')
+        terminal = tk.Text(overrun,font=('Consolas',10))
+        terminal.pack(fill='both')
+        subto = subprocess.Popen('python '+os.path.dirname(sys.argv[0])+'/exepackagemain.py',text=True,stdin=subprocess.PIPE,stdout=subprocess.PIPE,encoding='utf-8',stderr=subprocess.STDOUT,cwd=savefilepath.get())
         args = [packfilepath.get(),savefilepath.get(),str(issimple.get()),str(onkey.get()),key.get(),str(ondebug.get()),str(iswindow.get()),str(onicon.get()),iconfilepath.get()]
         subto.stdin.write('|'.join(args))#此处换行一次就是一个INPUT
         subto.stdin.close()#向子进程输入信息
@@ -33,6 +35,10 @@ def getpackagefile():#获取文件路径
     topackfile = filedialog.askopenfilename(title='请选择文件',filetypes=[('Python程序','.py')])
     if topackfile != '':
         packfilepath.set(topackfile)
+def getpackagefold():#获取文件目录
+    topackdir = filedialog.askdirectory(title='请选择目录')
+    if topackdir != '':
+        savefilepath.set(topackdir)
 def savepackagefile():#获取文件路径
     topackfile = filedialog.askdirectory(title='请选择输出文件路径')
     if topackfile != '':
@@ -57,7 +63,7 @@ packfilepath = tk.StringVar()
 packfilepath.set('')
 savefilepath = tk.StringVar()
 savefilepath.set('')
-gui.geometry('500x235')
+gui.geometry('500x300')
 gui.title('Python打包exe')
 tk.Label(gui,text='Python打包exe',background='orange',font=('华文细黑',22,'bold')).pack(fill='x')
 #第一步：选择文件路径
@@ -67,7 +73,14 @@ tk.Label(fileload,text='选择要打包的.py文件路径*',font=('微软雅黑'
 tk.Entry(fileload,width=40,textvariable=packfilepath).pack(side='left')
 tk.Button(fileload,text='选择……',command=getpackagefile,font=('微软雅黑',8)).pack(side='left')
 
+packin = tk.Frame(step1,relief='groove',borderwidth=2)
+tk.Label(packin,text='选择打包到的路径下*',font=('微软雅黑',10)).pack(side='left')
+tk.Entry(packin,width=40,textvariable=savefilepath).pack(side='left')
+tk.Button(packin,text='选择……',command=getpackagefold,font=('微软雅黑',8)).pack(side='left')
+
+
 fileload.pack(anchor='w')
+packin.pack(anchor='w')
 step1.pack(anchor='w')
 #第二步：指定文件参数
 step2 = tk.Frame(gui,relief='raised',borderwidth=2)
