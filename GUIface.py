@@ -11,7 +11,7 @@ def package():
         messagebox.showerror('错误！','部分打*的项目还没有填写。请检查后重试。')
     else:
         overrun = tk.Tk()
-        tk.Label(overrun,text='运行时的输出',background='green',font=('华文细黑',22,'bold'),foreground='white').pack(fill='x')
+        tk.Label(overrun,text='运行时的输出',background='purple',font=('华文细黑',22,'bold'),foreground='white').pack(fill='x')
         terminal = tk.Text(overrun,font=('Consolas',10))
         terminal.pack(fill='both')
         subto = subprocess.Popen('python '+os.path.dirname(sys.argv[0])+'/exepackagemain.py',text=True,stdin=subprocess.PIPE,stdout=subprocess.PIPE,encoding='utf-8',stderr=subprocess.STDOUT,cwd=savefilepath.get())
