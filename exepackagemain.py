@@ -24,7 +24,7 @@ if args[6] == 'True':
 else:
     shellcmd += ' -w'
 if args[7] == 'True':
-    shellcmd = ' --icon=' + args[8]
+    shellcmd = ' --icon="' + args[8] + '"'
 print('要运行的指令：',shellcmd,'开始运行……')
 create = subprocess.run(shellcmd)
 if create.returncode == 0:
