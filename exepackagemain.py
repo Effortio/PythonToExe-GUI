@@ -10,7 +10,7 @@ else:
     else:
         print('自动安装成功！')
 args = sys.stdin.read().split('|')
-shellcmd = 'pyinstaller ' + args[0]
+shellcmd = 'pyinstaller "' + args[0] + "\""
 if args[2] == 'True':
     shellcmd += ' -F'
 else:
