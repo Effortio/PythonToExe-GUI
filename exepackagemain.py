@@ -1,5 +1,4 @@
 import subprocess
-from time import sleep
 import sys
 if 'pyinstaller' in subprocess.run('pip list',encoding='utf-8',text=True,stdout=subprocess.PIPE).stdout:#获取pyinstaller库的安装
     print('检测到了pyinstaller的安装，开始进行打包')#检测库安装

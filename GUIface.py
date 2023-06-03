@@ -3,6 +3,8 @@ import subprocess
 import sys
 import tkinter as tk
 from tkinter import filedialog,messagebox
+import asyncio
+import threading #异步
 gui = tk.Tk()
 
 def package():
@@ -23,14 +25,11 @@ def package():
             line = line.strip()
             if line:
                 terminal.insert(tk.END,line + '\n')#追踪程序执行
-            if subto.returncode == 0:
-                terminal.insert(tk.END,'程序执行成功，可在您选定的目录里查看dist文件夹下文件。\n')
-            else:
-                errlog = {1:'无法安装pyinstaller库，请检查您的pip配置。',2:'在指令生成/运行中出现问题。'}
-                if subto.returncode == 1:
-                    terminal.insert(tk.END,'程序执行失败，错误码：' + str(subto.returncode) + '，错误原因：' + errlog[subto.returncode])
-                    with open('errorlog.txt','a',encoding='utf-8') as f:
-                        f.write(terminal.get(0,tk.END))
+        if subto.returncode == 0:
+            terminal.insert(tk.END,'程序执行成功，可在您选定的目录里查看dist文件夹下文件。\n')
+        else:
+            errlog = {1:'无法安装pyinstaller库，请检查您的pip配置。',2:'在指令生成/运行中出现问题。'}
+            terminal.insert(tk.END,'程序执行失败，错误码：' + str(subto.returncode) + '，错误原因：' + errlog[subto.returncode])
 def getpackagefile():#获取文件路径
     topackfile = filedialog.askopenfilename(title='请选择文件',filetypes=[('Python程序','.py')])
     if topackfile != '':
