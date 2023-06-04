@@ -1,10 +1,12 @@
 import subprocess
 import sys
-if 'pyinstaller' in subprocess.run('pip list',encoding='utf-8',text=True,stdout=subprocess.PIPE).stdout:#获取pyinstaller库的安装
-    print('检测到了pyinstaller的安装，开始进行打包')#检测库安装
+if 'pyinstaller' in subprocess.run(
+        'pip list', encoding='utf-8', text=True,
+        stdout=subprocess.PIPE).stdout:  #获取pyinstaller库的安装
+    print('检测到了pyinstaller的安装，开始进行打包')  #检测库安装
 else:
     print('未安装pyinstaller')
-    if subprocess.run('pip install pyinstaller').returncode != 0:
+    if subprocess.run('python.exe -m pip install pyinstaller').returncode != 0:
         exit(1)
     else:
         print('自动安装成功！')
@@ -24,11 +26,13 @@ else:
     shellcmd += ' -w'
 if args[7] == 'True':
     shellcmd += ' --icon="' + args[8] + '"'
-print('要运行的指令：',shellcmd,'开始运行……')
+if args[8] == 'True':
+    shellcmd += ' -y'
+print('要运行的指令：', shellcmd, '开始运行……')
 create = subprocess.run(shellcmd)
 if create.returncode == 0:
     print('指令执行成功！(0)')
     exit(0)
 else:
-    print('未知错误(' + str(create.returncode) + ')')
+    print('运行错误(' + str(create.returncode) + ')')
     exit(2)
