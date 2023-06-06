@@ -17,16 +17,14 @@ if args[2] == 'True':
 else:
     shellcmd += ' -D'
 if args[3] == 'True':
-    shellcmd += ' --key=' + args[4]
-if args[5] == 'True':
-    shellcmd += ' -d'
-if args[6] == 'True':
+    shellcmd += ' -d all'
+if args[4] == 'True':
     shellcmd += ' -c'
 else:
     shellcmd += ' -w'
+if args[5] == 'True':
+    shellcmd += ' --icon="' + args[6] + '"'
 if args[7] == 'True':
-    shellcmd += ' --icon="' + args[8] + '"'
-if args[8] == 'True':
     shellcmd += ' -y'
 print('要运行的指令：', shellcmd, '开始运行……')
 create = subprocess.run(shellcmd)

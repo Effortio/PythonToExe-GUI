@@ -20,8 +20,15 @@ def package():
                       font=('华文细黑', 22, 'bold'),
                       foreground='white')
     result.pack(fill='x')
-    terminal = tk.Text(overrun, font=('Consolas', 10))
+    scroll = tk.Scrollbar(overrun, orient="vertical")
+
+    terminal = tk.Text(overrun,
+                       font=('Consolas', 10),
+                       yscrollcommand=scroll.set)
+    scroll.pack(side="right", fill="y")
     terminal.pack(fill='both')
+    scroll.config(command=terminal.yview)
+
     subto = subprocess.Popen('python ' + os.path.dirname(sys.argv[0]) +
                              '/exepackagemain.py',
                              text=True,
@@ -34,8 +41,6 @@ def package():
         packfilepath.get(),
         savefilepath.get(),
         str(issimple.get()),
-        str(onkey.get()),
-        key.get(),
         str(ondebug.get()),
         str(iswindow.get()),
         str(onicon.get()),
@@ -58,7 +63,6 @@ def getoutput():
             terminal.insert(tk.END, line + '\n')  #追踪程序执行
     if subto.returncode == 0:
         terminal.insert(tk.END, '程序执行成功，可在您选定的目录里查看dist文件夹下文件。\n')
-        subprocess.run("explorer.exe '" + savefilepath.get() + "/dist'")
         result["text"] = "运行完成"
         result["bg"] = "green"
     else:
@@ -75,8 +79,10 @@ def threadment():
         messagebox.showerror('错误！', '部分打*的项目还没有填写。请检查后重试。')
     else:
         th1 = threading.Thread(target=package)
+        th1.daemon = True
         th1.start()
         th2 = threading.Thread(target=getoutput)
+        th2.daemon = True
         th2.start()
 
 
@@ -97,13 +103,6 @@ def savepackagefile():  #获取文件路径
     topackfile = filedialog.askdirectory(title='请选择输出文件路径')
     if topackfile != '':
         savefilepath.set(topackfile)
-
-
-def getdisabledofkey():
-    if onkey.get():
-        keyinput['state'] = 'normal'
-    else:
-        keyinput['state'] = 'disabled'
 
 
 def geticonfile():  #获取文件路径
@@ -136,7 +135,7 @@ tk.Label(gui,
 step1 = tk.Frame(gui, relief='raised', borderwidth=2)
 fileload = tk.Frame(step1, relief='groove', borderwidth=2)
 tk.Label(fileload, text='选择要打包的.py文件路径*', font=('微软雅黑', 10)).pack(side='left')
-tk.Entry(fileload, width=40, textvariable=packfilepath).pack(side='left')
+tk.Entry(fileload, width=39, textvariable=packfilepath).pack(side='left')
 tk.Button(fileload, text='选择……', command=getpackagefile,
           font=('微软雅黑', 8)).pack(side='left')
 
@@ -162,46 +161,17 @@ tk.Radiobutton(simp, text='多文件', value=False,
                variable=issimple).pack(side='left')
 simp.pack(side='left')
 
-key = tk.StringVar()
-key.set('')
-onkey = tk.BooleanVar()
-onkey.set(False)
-seckey = tk.Frame(line1, relief='groove', borderwidth=2)
-tk.Checkbutton(seckey,
-               text='加密打包',
-               font=('微软雅黑', 10),
-               command=getdisabledofkey,
-               onvalue=True,
-               offvalue=False,
-               variable=onkey).pack(side='left')
-keyinput = tk.Entry(seckey,
-                    textvariable=key,
-                    font=('微软雅黑', 10),
-                    state='disabled')
-keyinput.pack(side='left')
-seckey.pack(side='left')
-
-ondebug = tk.BooleanVar()
-debug = tk.Frame(line1, relief='groove', borderwidth=2)
-tk.Checkbutton(debug,
-               text='生成调试文件',
-               font=('微软雅黑', 10),
-               onvalue=True,
-               offvalue=False,
-               variable=ondebug).pack(side='left')
-debug.pack(side='left', fill='x')
-
-line1.pack(anchor='w')
-
-line2 = tk.Frame(step2)
-
-window = tk.Frame(line2, relief='groove', borderwidth=2)
+window = tk.Frame(line1, relief='groove', borderwidth=2)
 iswindow = tk.BooleanVar()
 tk.Radiobutton(window, text='有控制台', value=True,
                variable=iswindow).pack(side='left')
 tk.Radiobutton(window, text='无控制台', value=False,
                variable=iswindow).pack(side='left')
 window.pack(side='left')
+
+line1.pack(anchor='w')
+line2 = tk.Frame(step2)
+
 forcedel = tk.Frame(line2, relief='groove', borderwidth=2)
 isforcedel = tk.BooleanVar()
 tk.Checkbutton(forcedel,
@@ -214,6 +184,15 @@ tk.Checkbutton(forcedel,
 forcedel.pack(side="left")
 window.pack(side='left')
 
+ondebug = tk.BooleanVar()
+debug = tk.Frame(line2, relief='groove', borderwidth=2)
+tk.Checkbutton(debug,
+               text='生成调试文件',
+               font=('微软雅黑', 10),
+               onvalue=True,
+               offvalue=False,
+               variable=ondebug).pack(side='left')
+debug.pack(side='left', fill='x')
 line2.pack(anchor='w')
 
 line3 = tk.Frame(step2)
@@ -248,10 +227,11 @@ line3.pack(anchor='w')
 step2.pack(anchor='w')
 
 go = tk.Button(gui,
-               text='开始打包（所耗时间约15秒，请耐心等待）',
+               text='开始打包',
                background='green',
                activebackground='purple',
                foreground='white',
-               font=('华文宋体', 12, 'bold'),
+               font=('等线', 17, 'bold'),
                command=threadment).pack(fill='x')
+tk.Label(gui, text="打包时间约15~20秒，请耐心等待").pack()
 gui.mainloop()
