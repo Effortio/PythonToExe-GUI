@@ -57,10 +57,13 @@ def getoutput():
     while subto is None:
         sleep(0.05)  #等待执行完毕
     while subto.poll() is None:
-        line = subto.stdout.readline()
-        line = line.strip()
-        if line:
-            terminal.insert(tk.END, line + '\n')  #追踪程序执行
+        try:
+            line = subto.stdout.readline()
+            line = line.strip()
+            if line:
+                terminal.insert(tk.END, line + '\n')  #追踪程序执行
+        except:
+            pass
     if subto.returncode == 0:
         terminal.insert(tk.END, '程序执行成功，可在您选定的目录里查看dist文件夹下文件。\n')
         result["text"] = "运行完成"
